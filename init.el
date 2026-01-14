@@ -49,7 +49,7 @@
   (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
 
   ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
-  ;;(recentf-mode t) ;; Enable recent file mode
+  (recentf-mode t) ;; Enable recent file mode
 
   ;;(global-visual-line-mode t)           ;; Enable truncated lines
   ;;(display-line-numbers-type 'relative) ;; Relative line numbers
@@ -78,6 +78,8 @@
          ("<C-wheel-down>" . text-scale-decrease)
          )
   )
+
+
 
 (use-package general
   :config
@@ -164,7 +166,7 @@
 (add-to-list 'default-frame-alist '(alpha-background . 90)) ;; For all new frames henceforth
 
 (set-face-attribute 'default nil
-                    ;; :font "JetBrains Mono" ;; Set your favorite type of font or download JetBrains Mono
+                    :font "JetBrains Mono" ;; Set your favorite type of font or download JetBrains Mono
                     :height 120
                     :weight 'medium)
 ;; This sets the default font on all graphical frames created after restarting Emacs.
@@ -236,6 +238,70 @@
   ;;                          `(lambda (c)
   ;;                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
   )
+
+;; Shortcuts for storing links, viewing the agenda, and starting a capture
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+
+;; Org capture templates
+(setq org-capture-templates
+      '(
+        ;; 1. Journal Entry (j)
+        ("j" "Journal Entry"
+         entry (file+datetree "~/org/journal.org")
+         "* %(format-time-string \"%H:%M\") %?"
+         :empty-lines 0)
+
+        ;; 2. To-Do (t)
+        ("t" "To-Do"
+         entry (file+headline "~/org/todos.org" "General Tasks")
+         "* TODO [#B] %?\n"
+         :empty-lines 1)
+
+        ;; 3. Uebung (u)
+        ("u" "Uebung"
+         entry (file+headline "~/org/Uebungen.org" "Uebungen")
+         "* TODO [#A] UE: %?\n"
+         :empty-lines 1)
+
+        ;; 4. Klausuren (k)
+        ("k" "Klausur"
+         entry (file+headline "~/org/Klausuren.org" "Klausuren")
+         "* TODO [#A] Klausur: %?\n"
+         :empty-lines 1)
+        ))
+
+;; costum Agenda "d"
+(setq org-agenda-custom-commands
+      '(
+        ;; Daily Agenda & TODOs
+        ("d" "Daily agenda and all TODOs"
+
+         ;; Display items with priority A
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+
+          ;; View 7 days in the calendar view
+          (agenda "" ((org-agenda-span 7)))
+
+          ;; Display items with priority B (really it is view all items minus A & C)
+          (alltodo ""
+                   ((org-agenda-skip-function '(or (air-org-skip-subtree-if-priority ?A)
+                                                   (air-org-skip-subtree-if-priority ?C)
+                                                   (org-agenda-skip-if nil '(scheduled deadline))))
+                    (org-agenda-overriding-header "ALL normal priority tasks:")))
+
+          ;; Display items with pirority C
+          (tags "PRIORITY=\"C\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Low-priority Unfinished tasks:")))
+          )
+
+         ;; Don't compress things (change to suite your tastes)
+         ((org-agenda-compact-blocks nil)))
+        ))
 
 (use-package toc-org
   :commands toc-org-enable
