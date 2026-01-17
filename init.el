@@ -79,7 +79,12 @@
          )
   )
 
+;; compiling and running Java with the F5 key
+(defun run-java-file ()
+  (interactive)
+  (compile (format "java \"%s\"" (buffer-file-name (current-buffer))) t))
 
+(global-set-key (kbd "<f5>") 'run-java-file)
 
 (use-package general
   :config
@@ -173,7 +178,8 @@
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
 ;; are not right unless I also add this method of setting the default font.
 
-;;(add-to-list 'default-frame-alist '(font . "JetBrains Mono")) ;; Set your favorite font
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono")) ;; Set your favorite font
+
 (setq-default line-spacing 0.12)
 
 (use-package doom-modeline
