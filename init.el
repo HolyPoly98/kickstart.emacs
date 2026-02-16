@@ -239,7 +239,7 @@
   (org-mode . org-indent-mode) ;; Indent text
   ;; The following prevents <> from auto-pairing when electric-pair-mode is on.
   ;; Otherwise, org-tempo is broken when you try to <s TAB...
-  ;;(org-mode . (lambda ()
+  ;; (org-mode . (lambda ()
   ;;              (setq-local electric-pair-inhibit-predicate
   ;;                          `(lambda (c)
   ;;                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
@@ -253,29 +253,10 @@
 ;; Org capture templates
 (setq org-capture-templates
       '(
-        ;; 1. Journal Entry (j)
-        ("j" "Journal Entry"
-         entry (file+datetree "~/org/journal.org")
-         "* %(format-time-string \"%H:%M\") %?"
-         :empty-lines 0)
-
-        ;; 2. To-Do (t)
+        ;; 1. To-Do (t)
         ("t" "To-Do"
          entry (file+headline "~/org/todos.org" "General Tasks")
          "* TODO [#B] %?\n"
-         :empty-lines 1)
-
-        ;; 3. Uebung (u)
-        ("u" "Uebung"
-         entry (file+headline "~/org/Uebungen.org" "Uebungen")
-         "* TODO [#A] UE: %?\n"
-         :empty-lines 1)
-
-        ;; 4. Klausuren (k)
-        ("k" "Klausur"
-         entry (file+headline "~/org/Klausuren.org" "Klausuren")
-         "* TODO [#A] Klausur: %?\n"
-         :empty-lines 1)
         ))
 
 ;; costum Agenda "d"
@@ -320,6 +301,24 @@
 (use-package org-tempo
   :ensure nil
   :after org)
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "/Users/pascalstumptner/org"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
