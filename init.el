@@ -305,7 +305,7 @@
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory (file-truename "/Users/pascalstumptner/org"))
+  (org-roam-directory (file-truename "/Users/pascalstumptner/OrgRoam/"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
