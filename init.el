@@ -257,7 +257,7 @@
         ("t" "To-Do"
          entry (file+headline "~/org/todos.org" "General Tasks")
          "* TODO [#B] %?\n"
-        ))
+        )))
 
 ;; costum Agenda "d"
 (setq org-agenda-custom-commands
