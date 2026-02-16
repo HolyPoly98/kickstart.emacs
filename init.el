@@ -245,63 +245,6 @@
   ;;                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
   )
 
-;; Shortcuts for storing links, viewing the agenda, and starting a capture
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(define-key global-map "\C-cc" 'org-capture)
-
-;; Org capture templates
-(setq org-capture-templates
-      '(
-        ;; 1. To-Do (t)
-        ("t" "To-Do"
-         entry (file+headline "~/org/todos.org" "General Tasks")
-         "* TODO [#B] %?\n"
-        )))
-
-;; costum Agenda "d"
-(setq org-agenda-custom-commands
-      '(
-        ;; Daily Agenda & TODOs
-        ("d" "Daily agenda and all TODOs"
-
-         ;; Display items with priority A
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
-
-          ;; View 7 days in the calendar view
-          (agenda "" ((org-agenda-span 7)))
-
-          ;; Display items with priority B (really it is view all items minus A & C)
-          (alltodo ""
-                   ((org-agenda-skip-function '(or (air-org-skip-subtree-if-priority ?A)
-                                                   (air-org-skip-subtree-if-priority ?C)
-                                                   (org-agenda-skip-if nil '(scheduled deadline))))
-                    (org-agenda-overriding-header "ALL normal priority tasks:")))
-
-          ;; Display items with pirority C
-          (tags "PRIORITY=\"C\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Low-priority Unfinished tasks:")))
-          )
-
-         ;; Don't compress things (change to suite your tastes)
-         ((org-agenda-compact-blocks nil)))
-        ))
-
-(use-package toc-org
-  :commands toc-org-enable
-  :hook (org-mode . toc-org-mode))
-
-(use-package org-superstar
-  :after org
-  :hook (org-mode . org-superstar-mode))
-
-(use-package org-tempo
-  :ensure nil
-  :after org)
-
 (use-package org-roam
   :ensure t
   :custom
@@ -319,6 +262,34 @@
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
+
+;; Shortcuts for storing links, viewing the agenda, and starting a capture
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+
+;; Org capture templates
+(setq org-capture-templates
+      '(
+        ;; 1. To-Do (t)
+        ("t" "To-Do"
+         entry (file+headline "~/org/todos.org" "General Tasks")
+         "* TODO [#B] %?\n"
+        )))
+
+(use-package toc-org
+  :commands toc-org-enable
+  :hook (org-mode . toc-org-mode))
+
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode))
+
+(use-package org-tempo
+  :ensure nil
+  :after org)
+
+
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
