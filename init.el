@@ -163,10 +163,9 @@
 ;;           nil nil t)
 ;;   )
 
-(use-package gruvbox-theme
+(use-package cyberpunk-theme
   :config
-  (setq gruvbox-bold-constructs t)
-  (load-theme 'gruvbox-dark-medium t)) ;; We need to add t to trust this package
+  (load-theme 'cyberpunk t)) ;; We need to add t to trust this package
 
 (add-to-list 'default-frame-alist '(alpha-background . 90)) ;; For all new frames henceforth
 
