@@ -245,7 +245,7 @@
   )
 
 (use-package org-roam
-  :ensure t
+  :straight t
   :custom
   (org-roam-directory (file-truename "/Users/pascalstumptner/org/roam/"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -258,17 +258,6 @@
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   (org-roam-db-autosync-mode)
-  (setq org-roam-mode-sections
-      (list #'org-roam-backlinks-section
-            #'org-roam-reflinks-section
-            ;; #'org-roam-unlinked-references-section
-            ))
-  (add-to-list 'display-buffer-alist
-             '("\\*org-roam\\*"
-               (display-buffer-in-direction)
-               (direction . right)
-               (window-width . 0.33)
-               (window-height . fit-window-to-buffer)))
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
 
@@ -297,8 +286,6 @@
 (use-package org-tempo
   :ensure nil
   :after org)
-
-
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
