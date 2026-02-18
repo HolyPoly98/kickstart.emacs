@@ -245,7 +245,7 @@
   )
 
 (use-package org-roam
-  :straight t
+  :ensure t
   :custom
   (org-roam-directory (file-truename "/Users/pascalstumptner/org/roam/"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -487,6 +487,7 @@
 
 (use-package ws-butler
   :init (ws-butler-global-mode))
+
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
