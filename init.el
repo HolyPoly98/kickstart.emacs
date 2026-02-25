@@ -48,7 +48,7 @@
   (blink-cursor-mode nil)     ;; Don't blink cursor
   (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
 
-  ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
+  (dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
   (recentf-mode t) ;; Enable recent file mode
 
   ;;(global-visual-line-mode t)           ;; Enable truncated lines
