@@ -191,7 +191,7 @@
 
 (set-face-attribute 'default nil
                     :font "JetBrains Mono" ;; Set your favorite type of font or download JetBrains Mono
-                    :height 120
+                    :height 150
                     :weight 'medium)
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
