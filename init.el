@@ -86,15 +86,27 @@
 
 (global-set-key (kbd "<f5>") 'run-java-file)
 
+(use-package evil
+  :init
+  (setq evil-want-keybinding nil) ;; Required for evil-collection
+  :config
+  (evil-mode 1))
+
+;; Recommended: Fixes compatibility in specialized buffers like Dired
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
 (use-package general
   :config
-  ;; (general-evil-setup) ;; <- evil
+  (general-evil-setup) ;; <- evil
   ;; Set up 'C-SPC' as the leader key
   (general-create-definer start/leader-keys
-    ;; :states '(normal insert visual motion emacs) ;; <- evil
+    :states '(normal insert visual motion emacs) ;; <- evil
     :keymaps 'override
-    :prefix "C-SPC"
-    :global-prefix "C-SPC") ;; Set global leader key so we can access our keybindings from any state
+    :prefix "SPC"
+    :global-prefix "M-SPC") ;; Set global leader key so we can access our keybindings from any state
 
   (start/leader-keys
     "." '(find-file :wk "Find file")
@@ -106,7 +118,7 @@
 
   (start/leader-keys
     "s" '(:ignore t :wk "Search")
-    "s c" '((lambda () (interactive) (find-file "~/.config/emacs/init.org")) :wk "Find emacs Config")
+    "s c" '((lambda () (interactive) (find-file "~/.emacs")) :wk "Find emacs Config")
     "s r" '(consult-recent-file :wk "Search recent files")
     "s f" '(consult-fd :wk "Search files with fd")
     "s g" '(consult-ripgrep :wk "Search with ripgrep")
@@ -151,17 +163,25 @@
     "t" '(:ignore t :wk "Toggle")
     "t t" '(visual-line-mode :wk "Toggle truncated lines (wrap)")
     "t l" '(display-line-numbers-mode :wk "Toggle line numbers"))
+
+  (start/leader-keys
+	"n" '(:ignore t :wk "Notes")
+	"n l" '(org-roam-buffer-toggle :wk "Toggle Roam Buffer")
+	"n f" '(org-roam-node-find :wk "Find Node")
+	"n i" '(org-roam-node-insert :wk "Insert Node")
+	"n c" '(org-roam-capture :wk "Capture Note")
+	"n j" '(org-roam-dailies-capture-today :wk "Daily Note"))
   )
 
 ;; Fix general.el leader key not working instantly in messages buffer with evil mode
-;; (use-package emacs
-;;   :ghook ('after-init-hook
-;;           (lambda (&rest _)
-;;             (when-let ((messages-buffer (get-buffer "*Messages*")))
-;;               (with-current-buffer messages-buffer
-;;                 (evil-normalize-keymaps))))
-;;           nil nil t)
-;;   )
+ (use-package emacs
+   :ghook ('after-init-hook
+           (lambda (&rest _)
+             (when-let ((messages-buffer (get-buffer "*Messages*")))
+               (with-current-buffer messages-buffer
+                 (evil-normalize-keymaps))))
+           nil nil t)
+ )
 
 (use-package cyberpunk-theme
   :config
@@ -248,13 +268,6 @@
   :ensure t
   :custom
   (org-roam-directory (file-truename "/Users/pascalstumptner/org/roam/"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ("C-c n j" . org-roam-dailies-capture-today)
-		 ("C-c n t" . org-roam-tag-add))
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
@@ -287,6 +300,13 @@
 (use-package org-tempo
   :ensure nil
   :after org)
+
+(use-package evil-org
+  :after org
+  :hook (org-mode . evil-org-mode)
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-set-key-theme '(navigation insert shift todo heading)))
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
